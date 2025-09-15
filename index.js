@@ -3,10 +3,15 @@ const form = document.getElementById('search-form')
 const searchInput = document.getElementById('search-input')
 const myWatchlist = document.getElementById('my-watchlist')
 
-
 form.addEventListener('submit', searchMovie)
-myWatchlist.addEventListener('click', renderWatchlist)
+mainContainer.addEventListener('click', function(e) {
+    if (e.target.parentElement.classList.contains('watchlist')) {
+        console.log("Add to watchlist button clicked")
+        addToWatchlist()
+    }
+})
 
+myWatchlist.addEventListener('click', renderWatchlist)
 
 
 async function searchMovie(e) {
@@ -54,7 +59,6 @@ async function searchMovie(e) {
     // Render search results
     renderSearchResults(movieArr)
     console.log("Now rendering search results...")
-    
 }
 
 function renderNoResults() {
@@ -84,7 +88,7 @@ function renderSearchResults(movieArr) {
                     <h4 class="movie-data">
                         <p>${movie.Runtime}<p>
                         <p>${movie.Genre}<p>
-                        <div class="watchlist">
+                        <div class="watchlist" data-imbdID="${movie.imdbID}">
                             <img src="./images/plus-icon.png" class="plus-icon">
                             <p>Watchlist</p>
                         </div>
@@ -97,8 +101,17 @@ function renderSearchResults(movieArr) {
     })
     mainContainer.innerHTML = searchResultsHtml
     
+}
 
 
+function addToWatchlist() {
+    // Add imbdID to local storage
+}
+
+function renderWatchlist() {
+    // Read from local storage
+
+    // Render HTML in the main container
 }
 
 function renderMain() {

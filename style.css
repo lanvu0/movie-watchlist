@@ -37,6 +37,10 @@ main {
     text-align: center;
 }
 
+#my-watchlist {
+    cursor: pointer;
+}
+
 
 .header-text {
     display: flex;
