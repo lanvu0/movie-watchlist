@@ -1,11 +1,98 @@
 const mainContainer = document.querySelector('main')
+const form = document.getElementById('search-form')
+const searchInput = document.getElementById('search-input')
+
+form.addEventListener('submit', searchMovie)
+
+async function searchMovie(e) {
+    e.preventDefault()
+
+    let res = await fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=dfef5489&s=${searchInput.value}&type=movie`)
+    let data = await res.json()
+    if (data.Response === "False") {
+        renderNoResults()
+        return
+    }
+    
+    const movieArr = data.Search
+
+    // Update each movie with extra properties: duration, genres, description...
+    movieArr.forEach(async function(movie){
+        res = await fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=dfef5489&t=${movie.Title}&type=movie`)
+        data = await res.json()
+        
+        movie.Genre = data.Genre
+        movie.Plot = data.Plot
+        movie.Runtime = data.Runtime
+        movie.imdbRating = data.imdbRating        
+        
+    });
+
+    await Promise.all(movieArr.map(async movie => {
+        // Fetch the movie details
+        res = await fetch(`http://www.omdbapi.com/?apikey=dfef5489&i=${movie.imdbID}&type=movie`)
+        data = await res.json()
+        console.log(data)
+
+        // Add new properties to movie object
+        movie.Genre = data.Genre || "N/A"
+        movie.Plot = data.Plot || "No description available"
+        movie.Runtime = data.Runtime || "N/A"
+        movie.imdbRating = data.imdbRating || "N/A"
+    }))
+
+    // Clear search input and background
+    searchInput.value = ""
+    mainContainer.style.background = "none"
+    console.log(movieArr)
+
+    // Render search results
+    renderSearchResults(movieArr)
+    console.log("Now rendering search results...")
+    
+}
+
+function renderNoResults() {
+    // Found 0 search results
+    mainContainer.innerHTML = "<p class='search-failed'>Unable to find what you're looking for. Please try another search.</p>"
+    mainContainer.style.justifyContent = "center"
+    mainContainer.style.background = "none"
+}
+
+function renderSearchResults(movieArr) {
+    console.log(movieArr)
+    searchResultsHtml = ""
+
+    movieArr.forEach(movie => {
+        movie.Poster = movie.Poster === 'N/A' ? "" : movie.Poster
+        searchResultsHtml += `
+            <div class="movie-item">
+                <div class="left">
+                    <img src="${movie.Poster}" alt="Movie poster for ${movie.Title}">
+                </div>
+                <div class="right">
+                    <div class="movie-header">
+                        <h3>${movie.Title}</h3>
+                        <h4>${movie.imdbRating}</h4>
+                    </div>
+                    <h4 class="movie-data">
+                        ${movie.Runtime}
+                        ${movie.Genre}
+                        <span class="add-btn">
+                            Watchlist
+                        </span>
+                    </h4>
+                    <p class="movie-description">${movie.Plot}</p>
+                </div>
+            </div>
+            
+        `
+    })
+    mainContainer.innerHTML = searchResultsHtml
+    
 
 
-fetch('http://www.omdbapi.com/?i=tt3896198&apikey=dfef5489')
-    .then(res => res.json())
-    .then(data => console.log(data))
-
-
+}
 
 function renderMain() {
     mainContainer.style.background = `url('start-exploring.png')`
