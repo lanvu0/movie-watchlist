@@ -118,7 +118,7 @@ function removeFromWatchlist(imdbId) {
     if (myWatchlist.includes(imdbId)) {
         // Delete array element
         delete myWatchlist[myWatchlist.indexOf(imdbId)]
-        
+
         // Update local storage
         localStorage.setItem("myWatchlist", JSON.stringify(myWatchlist))
 
@@ -149,6 +149,9 @@ async function populateMovieObj(imdbId) {
 
 
 async function renderWatchlist() {
+    // Hide search bar
+    form.classList.toggle('hidden')
+
     // Read from local storage
     const movieIdArr = JSON.parse(localStorage.getItem("myWatchlist"))
     console.log(movieIdArr)
