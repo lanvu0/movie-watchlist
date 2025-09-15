@@ -19,6 +19,7 @@ myWatchlistEl.addEventListener('click', renderWatchlist)
 
 
 async function searchMovie(e) {
+    console.log("Running searchMovie")
     e.preventDefault()
 
     let res = await fetch(`http://www.omdbapi.com/?apikey=dfef5489&s=${searchInput.value}&type=movie`)
@@ -38,7 +39,6 @@ async function searchMovie(e) {
     // Clear search input and background
     searchInput.value = ""
     mainContainer.style.background = "none"
-    console.log(movieArr)
 
     // Render search results
     renderMovieList(movieArr)
@@ -149,11 +149,26 @@ async function populateMovieObj(imdbId) {
 
 
 async function renderWatchlist() {
+    mainContainer.style.background = "none"
+
     // Hide search bar
     form.classList.toggle('hidden')
 
     // Read from local storage
     const movieIdArr = JSON.parse(localStorage.getItem("myWatchlist"))
+    if (movieIdArr[0] === null) {
+        // Empty watch list
+        console.log("Empty watch list...")
+        mainContainer.innerHTML = `
+            <h2>Your watchlist is looking a little empty...</h2>
+            <div class="action-btn">
+                <img src="./images/plus-icon.png" class="action-icon">
+                <h3>Let's add some movies!</h3>
+            </div>
+        `
+        return
+    }
+
     console.log(movieIdArr)
     const movieArr = await Promise.all(movieIdArr.map(populateMovieObj))
 
