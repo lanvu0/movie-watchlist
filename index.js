@@ -1,8 +1,13 @@
 const mainContainer = document.querySelector('main')
 const form = document.getElementById('search-form')
 const searchInput = document.getElementById('search-input')
+const myWatchlist = document.getElementById('my-watchlist')
+
 
 form.addEventListener('submit', searchMovie)
+myWatchlist.addEventListener('click', renderWatchlist)
+
+
 
 async function searchMovie(e) {
     e.preventDefault()
@@ -73,14 +78,16 @@ function renderSearchResults(movieArr) {
                 <div class="right">
                     <div class="movie-header">
                         <h3>${movie.Title}</h3>
-                        <h4>${movie.imdbRating}</h4>
+                        <img src="./images/star.png" class="star-icon">
+                        <p class="movie-rating">${movie.imdbRating}</p>
                     </div>
                     <h4 class="movie-data">
-                        ${movie.Runtime}
-                        ${movie.Genre}
-                        <span class="add-btn">
-                            Watchlist
-                        </span>
+                        <p>${movie.Runtime}<p>
+                        <p>${movie.Genre}<p>
+                        <div class="watchlist">
+                            <img src="./images/plus-icon.png" class="plus-icon">
+                            <p>Watchlist</p>
+                        </div>
                     </h4>
                     <p class="movie-description">${movie.Plot}</p>
                 </div>
@@ -95,7 +102,7 @@ function renderSearchResults(movieArr) {
 }
 
 function renderMain() {
-    mainContainer.style.background = `url('start-exploring.png')`
+    mainContainer.style.background = `url('./images/start-exploring.png')`
     mainContainer.style.backgroundRepeat = "no-repeat"
     mainContainer.style.backgroundPosition = "center"
     mainContainer.style.backgroundSize = "15rem"
