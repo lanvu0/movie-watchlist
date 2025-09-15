@@ -147,7 +147,7 @@ h2 {
     align-items: center;
 }
 
-.plus-icon {
+.action-icon {
     height: 1rem;
     display: flex;
     align-items: center;
@@ -178,7 +178,7 @@ h2 {
     height: 1rem;
 }
 
-.watchlist {
+.action-btn {
     display: flex;
     justify-content: center;
     align-items: center;

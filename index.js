@@ -6,9 +6,13 @@ const myWatchlist = []
 
 form.addEventListener('submit', searchMovie)
 mainContainer.addEventListener('click', function(e) {
-    if (e.target.parentElement.classList.contains('watchlist')) {
-        console.log("Add to watchlist button clicked")
+    if (e.target.parentElement.classList.contains('add-movie')) {
+        console.log("Add movie to watchlist button clicked")
         addToWatchlist(e.target.parentElement.dataset.imdbId)
+    } else if (e.target.parentElement.classList.contains('remove-movie')) {
+        console.log(`Remove movie with ID ${e.target.parentElement.dataset.imdbId} from watchlist button clicked`)
+        removeFromWatchlist(e.target.parentElement.dataset.imdbId)
+        
     }
 })
 myWatchlistEl.addEventListener('click', renderWatchlist)
@@ -50,14 +54,14 @@ function renderNoResults() {
 
 function renderMovieList(movieArr) {
     console.log(movieArr)
-    searchResultsHtml = ""
+    movieListHtml = ""
 
     movieArr.forEach(movie => {
         // Use placeholder if Poster is "N/A" or empty
         movie.Poster = movie.Poster === 'N/A' ? "" : movie.Poster
 
-        searchResultsHtml += `
-            <div class="movie-item">
+        movieListHtml += `
+            <div class="movie-item" data-imdb-id="${movie.imdbID}">
                 <div class="left">
                     <img src="${movie.Poster}" alt="Movie poster for ${movie.Title}">
                 </div>
@@ -70,9 +74,22 @@ function renderMovieList(movieArr) {
                     <h4 class="movie-data">
                         <p>${movie.Runtime}<p>
                         <p>${movie.Genre}<p>
-                        <div class="watchlist" data-imdb-id="${movie.imdbID}">
-                            <img src="./images/plus-icon.png" class="plus-icon">
-                            <p>Watchlist</p>
+        `
+        if (myWatchlistEl.textContent === "My Watchlist") {
+            movieListHtml += `
+                <div class="add-movie action-btn" data-imdb-id="${movie.imdbID}">
+                <img src="./images/plus-icon.png" class="action-icon">
+                <p>Watchlist</p>
+            `
+        } else {
+            movieListHtml += `
+                <div class="remove-movie action-btn" data-imdb-id="${movie.imdbID}">
+                <img src="./images/subtract-icon.png" class="action-icon">
+                <p>Remove</p>
+            `
+        }
+        
+        movieListHtml += `
                         </div>
                     </h4>
                     <p class="movie-description">${movie.Plot}</p>
@@ -82,7 +99,7 @@ function renderMovieList(movieArr) {
         `
     })
 
-    mainContainer.innerHTML = searchResultsHtml
+    mainContainer.innerHTML = movieListHtml
 }
 
 
@@ -92,6 +109,22 @@ function addToWatchlist(imdbId) {
         // Add imdbID to local storage
         myWatchlist.push(imdbId)
         localStorage.setItem("myWatchlist", JSON.stringify(myWatchlist))
+    }
+}
+
+function removeFromWatchlist(imdbId) {
+    console.log(myWatchlist)
+    console.log(imdbId)
+    if (myWatchlist.includes(imdbId)) {
+        // Delete array element
+        delete myWatchlist[myWatchlist.indexOf(imdbId)]
+        
+        // Update local storage
+        localStorage.setItem("myWatchlist", JSON.stringify(myWatchlist))
+
+        // Delete the HTML element with imdbId
+        document.querySelector(`[data-imdb-id="${imdbId}"]`).remove()
+        console.log(`Deleted ${imdbId}`)
     }
 }
 
@@ -124,8 +157,8 @@ async function renderWatchlist() {
     console.log(movieArr)
 
     // Render HTML in the main container
-    renderMovieList(movieArr)
     myWatchlistEl.textContent = "Search for movies"
+    renderMovieList(movieArr)
 }
 
 function renderMain() {
