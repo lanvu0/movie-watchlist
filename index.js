@@ -45,8 +45,7 @@ async function searchMovie(e) {
     // Update each movie with extra properties: duration, genres, description...
     const movieArr = await Promise.all(movieIdArr.map(populateMovieObj))
 
-    // Clear search input and background
-    searchInput.value = ""
+    // Clear background
     mainContainer.style.background = "none"
 
     // Render search results
