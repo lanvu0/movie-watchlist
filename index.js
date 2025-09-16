@@ -2,7 +2,8 @@ const mainContainer = document.querySelector('main')
 const form = document.getElementById('search-form')
 const searchInput = document.getElementById('search-input')
 const myWatchlistEl = document.getElementById('my-watchlist')
-const myWatchlist = []
+// Get watchlist from localStorage, or default to empty array
+const myWatchlist = JSON.parse(localStorage.getItem("myWatchlist")) || []
 
 form.addEventListener('submit', searchMovie)
 mainContainer.addEventListener('click', function(e) {
@@ -115,16 +116,18 @@ function addToWatchlist(imdbId) {
 function removeFromWatchlist(imdbId) {
     console.log(myWatchlist)
     console.log(imdbId)
-    if (myWatchlist.includes(imdbId)) {
-        // Delete array element
-        delete myWatchlist[myWatchlist.indexOf(imdbId)]
+
+    const index = myWatchlist.indexOf(imdbId)
+    if (index > -1) {
+        // Make sure item exists
+        myWatchlist.splice(index, 1)
 
         // Update local storage
         localStorage.setItem("myWatchlist", JSON.stringify(myWatchlist))
 
         // Delete the HTML element with imdbId
-        document.querySelector(`[data-imdb-id="${imdbId}"]`).remove()
-        console.log(`Deleted ${imdbId}`)
+        document.querySelector(`.movie-item[data-imdb-id="${imdbId}"]`).remove()
+        console.log(`Removed ${imdbId}`)
     }
 }
 
@@ -150,13 +153,17 @@ async function populateMovieObj(imdbId) {
 
 async function renderWatchlist() {
     mainContainer.style.background = "none"
+    myWatchlistEl.textContent = "Search for movies"
 
     // Hide search bar
     form.classList.toggle('hidden')
 
     // Read from local storage
-    const movieIdArr = JSON.parse(localStorage.getItem("myWatchlist"))
-    if (movieIdArr[0] === null) {
+    let movieIdArr = JSON.parse(localStorage.getItem("myWatchlist"))
+    // Filter out any potential null values
+    movieIdArr = movieIdArr.filter(id => id != null)
+
+    if (movieIdArr.length === 0) {
         // Empty watch list
         console.log("Empty watch list...")
         mainContainer.innerHTML = `
@@ -175,7 +182,6 @@ async function renderWatchlist() {
     console.log(movieArr)
 
     // Render HTML in the main container
-    myWatchlistEl.textContent = "Search for movies"
     renderMovieList(movieArr)
 }
 
