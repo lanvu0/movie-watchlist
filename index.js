@@ -31,7 +31,7 @@ async function searchMovie(e) {
     console.log("Running searchMovie")
     e.preventDefault()
 
-    let res = await fetch(`http://www.omdbapi.com/?apikey=dfef5489&s=${searchInput.value}&type=movie`)
+    let res = await fetch(`https://www.omdbapi.com/?apikey=dfef5489&s=${searchInput.value}&type=movie`)
     let data = await res.json()
 
     if (data.Response === "False") {
@@ -143,7 +143,7 @@ function removeFromWatchlist(imdbId) {
 
 async function populateMovieObj(imdbId) {
     // Fetch the movie details
-    res = await fetch(`http://www.omdbapi.com/?apikey=dfef5489&i=${imdbId}&type=movie`)
+    res = await fetch(`https://www.omdbapi.com/?apikey=dfef5489&i=${imdbId}&type=movie`)
     data = await res.json()
     console.log(data)
 
