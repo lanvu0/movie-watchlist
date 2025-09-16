@@ -37,10 +37,9 @@ main {
     text-align: center;
 }
 
-#my-watchlist {
+#header-link {
     cursor: pointer;
 }
-
 
 .header-text {
     display: flex;
@@ -187,4 +186,32 @@ h2 {
 
 .hidden {
     display: none !important;
+}
+
+.empty-watchlist {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.empty-watchlist * {
+    margin-bottom: 0;
+    margin-top: 0.5em;
+    text-align: center;
+}
+
+.empty-watchlist h2 {
+    font-size: 1.75rem;
+}
+
+.empty-watchlist h3 {
+    font-size: 1.5rem;
+    color: #363636;
+}
+
+.empty-watchlist img {
+    width: 1.5rem;
+    margin-right: 0.5em;
+    height: 100%;
 }

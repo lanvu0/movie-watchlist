@@ -1,7 +1,7 @@
 const mainContainer = document.querySelector('main')
 const form = document.getElementById('search-form')
 const searchInput = document.getElementById('search-input')
-const myWatchlistEl = document.getElementById('my-watchlist')
+const headerLink = document.getElementById('header-link')
 // Get watchlist from localStorage, or default to empty array
 const myWatchlist = JSON.parse(localStorage.getItem("myWatchlist")) || []
 
@@ -16,8 +16,16 @@ mainContainer.addEventListener('click', function(e) {
         
     }
 })
-myWatchlistEl.addEventListener('click', renderWatchlist)
 
+document.addEventListener('click', (e) => {
+    if (e.target.closest('.page-change')) {
+        if (headerLink.textContent === "Search for movies") {
+            renderMain()
+        } else if (headerLink.textContent === "My Watchlist") {
+            renderWatchlist()
+        }
+    }
+})
 
 async function searchMovie(e) {
     console.log("Running searchMovie")
@@ -76,7 +84,7 @@ function renderMovieList(movieArr) {
                         <p>${movie.Runtime}<p>
                         <p>${movie.Genre}<p>
         `
-        if (myWatchlistEl.textContent === "My Watchlist") {
+        if (headerLink.textContent === "My Watchlist") {
             movieListHtml += `
                 <div class="add-movie action-btn" data-imdb-id="${movie.imdbID}">
                 <img src="./images/plus-icon.png" class="action-icon">
@@ -101,6 +109,7 @@ function renderMovieList(movieArr) {
     })
 
     mainContainer.innerHTML = movieListHtml
+    mainContainer.style.justifyContent = "flex-start"
 }
 
 
@@ -153,7 +162,7 @@ async function populateMovieObj(imdbId) {
 
 async function renderWatchlist() {
     mainContainer.style.background = "none"
-    myWatchlistEl.textContent = "Search for movies"
+    headerLink.textContent = "Search for movies"
 
     // Hide search bar
     form.classList.toggle('hidden')
@@ -167,12 +176,15 @@ async function renderWatchlist() {
         // Empty watch list
         console.log("Empty watch list...")
         mainContainer.innerHTML = `
-            <h2>Your watchlist is looking a little empty...</h2>
-            <div class="action-btn">
-                <img src="./images/plus-icon.png" class="action-icon">
-                <h3>Let's add some movies!</h3>
+            <div class="empty-watchlist">
+                <h2>Your watchlist is looking a little empty...</h2>
+                <div class="action-btn page-change">
+                    <img src="./images/plus-icon.png" class="action-icon">
+                    <h3>Let's add some movies!</h3>
+                </div>
             </div>
         `
+        mainContainer.style.justifyContent = "center"
         return
     }
 
@@ -190,6 +202,9 @@ function renderMain() {
     mainContainer.style.backgroundRepeat = "no-repeat"
     mainContainer.style.backgroundPosition = "center"
     mainContainer.style.backgroundSize = "15rem"
+    headerLink.textContent = "My Watchlist"
+    form.classList.toggle('hidden')
+    mainContainer.innerHTML = ""
 }
 
 renderMain()
