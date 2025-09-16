@@ -5,8 +5,7 @@ A simple, client-side web application for searching movies and maintaining a per
 **Live Demo:** [https://moovie-watchlist.netlify.app/](https://moovie-watchlist.netlify.app/)
 
 <!-- Add a screenshot or GIF of your application in action -->
-![A screenshot of the movie watchlist application showing the search results and the watchlist page.](./screenshot.png) 
-*(Note: You will need to add your own screenshot file named `screenshot.png` to the repository for the image to display.)*
+![A screenshot of the movie watchlist application showing the search results and the watchlist page.](./demo.png) 
 
 ## Overview
 
